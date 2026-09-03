@@ -34,6 +34,10 @@
       <div class="flex items-center justify-between mb-4">
         <h2 id="calendar-label" class="text-xl font-bold dept-color"></h2>
         <div class="flex items-center gap-1">
+          <div class="flex items-center gap-1 mr-2">
+            <button id="view-month" type="button" class="view-btn" data-ko="월간" data-en="Month"></button>
+            <button id="view-week"  type="button" class="view-btn" data-ko="주간" data-en="Week"></button>
+          </div>
           <button id="cal-today" type="button"
                   class="px-3 py-1 text-xs font-semibold rounded-md border border-gray-300 hover:bg-gray-50"
                   data-ko="오늘" data-en="Today"></button>
@@ -54,10 +58,11 @@
          data-ko="불러오는 중…" data-en="Loading…"></p>
 
       <div id="calendar-grid" class="cal-grid rounded-lg overflow-hidden border border-gray-200"></div>
+      <div id="week-grid" class="week-grid" hidden></div>
 
       <p class="mt-3 text-xs text-gray-500"
-         data-ko="날짜를 클릭하면 그 날의 예약 현황과 예약 폼이 오른쪽에 표시됩니다."
-         data-en="Click a date to see that day's bookings and the form."></p>
+         data-ko="날짜를 클릭하면 그 날의 예약 현황과 예약 폼이 오른쪽에 표시됩니다. 주간 보기에서는 빈 시간대를 클릭하면 시작 시간이 자동으로 입력됩니다."
+         data-en="Click a date to see that day's bookings and the form. In week view, click an empty slot to prefill the start time."></p>
     </section>
 
     <!-- day detail + form -->

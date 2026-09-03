@@ -29,8 +29,12 @@ function timeOptions() {
 
 /* --- state --------------------------------------------------------------- */
 
+const HOUR_PX = 44;          // pixel height of one hour in the week grid
+const VIEW_KEY = 'dept-mbio-view';
+
 const state = {
-  view: new Date(),            // any date inside the month being displayed
+  mode: localStorage.getItem(VIEW_KEY) === 'week' ? 'week' : 'month',
+  view: new Date(),            // any date inside the month/week being displayed
   selected: isoOf(new Date()), // the day shown in the detail panel
   reservations: [],            // reservations covering the displayed month
   loading: false,
@@ -116,6 +120,26 @@ function monthBounds(view) {
   return [isoOf(first), isoOf(last)];
 }
 
+/** Sunday of the week containing `view`. */
+function weekStart(view) {
+  const d = new Date(view);
+  d.setHours(0, 0, 0, 0);
+  d.setDate(d.getDate() - d.getDay());
+  return d;
+}
+
+function weekBounds(view) {
+  const first = weekStart(view);
+  const last = new Date(first);
+  last.setDate(first.getDate() + 6);
+  return [isoOf(first), isoOf(last)];
+}
+
+/** The date range currently on screen, for whichever view is active. */
+function visibleBounds() {
+  return state.mode === 'week' ? weekBounds(state.view) : monthBounds(state.view);
+}
+
 function renderCalendar() {
   const grid = document.getElementById('calendar-grid');
   const label = document.getElementById('calendar-label');
@@ -175,11 +199,120 @@ function renderCalendar() {
   grid.innerHTML = html;
   grid.querySelectorAll('[data-date]').forEach((cell) => {
     cell.addEventListener('click', () => {
-      state.selected = cell.dataset.date;
-      renderCalendar();
-      renderDay();
+      selectDate(cell.dataset.date);
     });
   });
+}
+
+function renderWeek() {
+  const grid = document.getElementById('week-grid');
+  const label = document.getElementById('calendar-label');
+  const first = weekStart(state.view);
+  const todayIso = isoOf(new Date());
+
+  const last = new Date(first);
+  last.setDate(first.getDate() + 6);
+  label.textContent = lang() === 'ko'
+    ? `${first.getMonth() + 1}월 ${first.getDate()}일 – ${last.getMonth() + 1}월 ${last.getDate()}일`
+    : `${first.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} – `
+      + `${last.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+
+  const dayNames = lang() === 'ko'
+    ? ['일', '월', '화', '수', '목', '금', '토']
+    : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const hours = CFG.closeHour - CFG.openHour;
+  const colHeight = hours * HOUR_PX;
+
+  // header row: an empty gutter cell, then the seven days
+  let html = '<div class="week-head"></div>';
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(first);
+    d.setDate(first.getDate() + i);
+    const iso = isoOf(d);
+    const cls = ['week-head', iso === state.selected ? 'is-selected' : '', iso === todayIso ? 'is-today' : ''].join(' ');
+    html += `<div class="${cls}" data-date="${iso}">
+      <span class="wd">${dayNames[i]}</span><span class="dd">${d.getDate()}</span>
+    </div>`;
+  }
+
+  // hour labels down the left
+  let gutter = `<div class="week-gutter" style="height:${colHeight}px">`;
+  for (let h = CFG.openHour; h <= CFG.closeHour; h++) {
+    gutter += `<span style="top:${(h - CFG.openHour) * HOUR_PX}px">${pad(h)}:00</span>`;
+  }
+  html += gutter + '</div>';
+
+  // one column per day, bookings positioned by time
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(first);
+    d.setDate(first.getDate() + i);
+    const iso = isoOf(d);
+    const weekend = i === 0 || i === 6;
+
+    const events = state.reservations.filter((r) => r.date === iso).map((r) => {
+      const top = ((toMin(r.start) - CFG.openHour * 60) / 60) * HOUR_PX;
+      const height = Math.max(((toMin(r.end) - toMin(r.start)) / 60) * HOUR_PX - 2, 14);
+      return `<div class="week-event" style="top:${top}px;height:${height}px"
+                   data-cancel="${esc(r.id)}"
+                   title="${esc(r.start)}–${esc(r.end)} ${esc(r.name)} (${esc(r.lab || '')})">
+                <span class="we-name">${esc(r.name)}</span> ${esc(r.start)}
+              </div>`;
+    }).join('');
+
+    html += `<div class="week-col ${weekend ? 'is-weekend' : ''}" data-daycol="${iso}"
+                  style="height:${colHeight}px;--hour-px:${HOUR_PX}px">${events}</div>`;
+  }
+
+  grid.innerHTML = html;
+
+  grid.querySelectorAll('.week-head[data-date]').forEach((el) => {
+    el.addEventListener('click', () => selectDate(el.dataset.date));
+  });
+
+  grid.querySelectorAll('.week-event[data-cancel]').forEach((el) => {
+    el.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      onCancel(el.dataset.cancel);
+    });
+  });
+
+  // Clicking empty space picks that day and prefills the nearest start time.
+  grid.querySelectorAll('.week-col[data-daycol]').forEach((col) => {
+    col.addEventListener('click', (ev) => {
+      const y = ev.clientY - col.getBoundingClientRect().top;
+      const raw = CFG.openHour * 60 + (y / HOUR_PX) * 60;
+      const snapped = Math.round(raw / CFG.slotMinutes) * CFG.slotMinutes;
+      const clamped = Math.min(Math.max(snapped, CFG.openHour * 60), CFG.closeHour * 60 - CFG.slotMinutes);
+      selectDate(col.dataset.daycol, fromMin(clamped));
+    });
+  });
+}
+
+/** Select a day, optionally prefilling a start time, and refresh the panel. */
+function selectDate(iso, startTime) {
+  state.selected = iso;
+  draw();
+  renderDay();
+  if (startTime) {
+    const startSel = document.getElementById('f-start');
+    if ([...startSel.options].some((o) => o.value === startTime && !o.disabled)) {
+      startSel.value = startTime;
+      syncEndAfterStart();
+    }
+  }
+}
+
+/** Render whichever view is active. */
+function draw() {
+  const month = document.getElementById('calendar-grid');
+  const week = document.getElementById('week-grid');
+  const isWeek = state.mode === 'week';
+  month.hidden = isWeek;
+  week.hidden = !isWeek;
+  document.getElementById('view-month').classList.toggle('is-active', !isWeek);
+  document.getElementById('view-week').classList.toggle('is-active', isWeek);
+  if (isWeek) renderWeek(); else renderCalendar();
 }
 
 function renderDay() {
@@ -277,7 +410,7 @@ function flash(message, kind = 'info') {
 }
 
 async function refresh() {
-  const [from, to] = monthBounds(state.view);
+  const [from, to] = visibleBounds();
   state.loading = true;
   document.getElementById('calendar-loading').hidden = false;
   try {
@@ -291,7 +424,7 @@ async function refresh() {
     state.loading = false;
     document.getElementById('calendar-loading').hidden = true;
   }
-  renderCalendar();
+  draw();
   renderDay();
 }
 
@@ -382,14 +515,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('f-start').addEventListener('change', syncEndAfterStart);
 
-  document.getElementById('cal-prev').addEventListener('click', () => {
-    state.view = new Date(state.view.getFullYear(), state.view.getMonth() - 1, 1);
+  const step = (dir) => {
+    if (state.mode === 'week') {
+      const d = new Date(state.view);
+      d.setDate(d.getDate() + dir * 7);
+      state.view = d;
+    } else {
+      state.view = new Date(state.view.getFullYear(), state.view.getMonth() + dir, 1);
+    }
     refresh();
-  });
-  document.getElementById('cal-next').addEventListener('click', () => {
-    state.view = new Date(state.view.getFullYear(), state.view.getMonth() + 1, 1);
+  };
+  document.getElementById('cal-prev').addEventListener('click', () => step(-1));
+  document.getElementById('cal-next').addEventListener('click', () => step(1));
+
+  const setMode = (mode) => {
+    if (state.mode === mode) return;
+    state.mode = mode;
+    localStorage.setItem(VIEW_KEY, mode);
+    // Keep the selected day on screen when switching views.
+    state.view = new Date(`${state.selected}T00:00:00`);
     refresh();
-  });
+  };
+  document.getElementById('view-month').addEventListener('click', () => setMode('month'));
+  document.getElementById('view-week').addEventListener('click', () => setMode('week'));
   document.getElementById('cal-today').addEventListener('click', () => {
     state.view = new Date();
     state.selected = isoOf(new Date());
@@ -402,7 +550,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('langchange', () => {
     document.getElementById('room-name').textContent = t(CFG.room.name);
     document.getElementById('room-location').textContent = t(CFG.room.location);
-    renderCalendar();
+    draw();
     renderDay();
   });
 
