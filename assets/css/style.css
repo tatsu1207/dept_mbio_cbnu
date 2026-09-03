@@ -82,6 +82,8 @@ html[lang="ko"] body { word-break: keep-all; }
 .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px; background: var(--line); }
 .cal-cell { background: #fff; min-height: 92px; padding: .375rem; font-size: .8125rem; }
 .cal-cell.is-outside { background: #fafafa; color: #c4c8ce; }
+.cal-cell.is-past { background: #fafbfc; }
+.cal-cell.is-past > span:first-child { color: #b8bdc6; }
 .cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--cbnu-accent); }
 .cal-dot {
   display: block; width: 100%; text-align: left;

@@ -10,6 +10,7 @@
 
 var SHEET_NAME     = 'Reservations';
 var MAX_DAYS_AHEAD = 90;
+var MIN_LEAD_HOURS = 2;   // a booking may not start sooner than this from now
 var MAX_HOURS      = 6;
 var OPEN_HOUR      = 8;
 var CLOSE_HOUR     = 22;
@@ -136,6 +137,15 @@ function create_(b) {
 
   var today = todayIso_();
   if (date < today) return { ok: false, error: 'PAST_DATE' };
+
+  // Reject times already gone, and last-minute claims on a room that may well
+  // be occupied right now. Parsed in the script's own timezone.
+  var tz = Session.getScriptTimeZone();
+  var startsAt = Utilities.parseDate(date + ' ' + start, tz, 'yyyy-MM-dd HH:mm');
+  var earliest = new Date(new Date().getTime() + MIN_LEAD_HOURS * 3600 * 1000);
+  if (startsAt.getTime() < earliest.getTime()) {
+    return { ok: false, error: 'TOO_SOON' };
+  }
 
   var limit = new Date();
   limit.setDate(limit.getDate() + MAX_DAYS_AHEAD);

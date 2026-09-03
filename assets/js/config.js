@@ -25,5 +25,6 @@ window.DEPT_CONFIG = {
   slotMinutes: 30,      // granularity of the start/end time menus
   maxHours: 6,          // longest single booking
   maxDaysAhead: 90,     // how far into the future bookings are accepted
+  minLeadHours: 2,      // no booking may start sooner than this from now
   allowWeekends: true,
 };

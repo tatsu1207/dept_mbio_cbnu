@@ -18,6 +18,16 @@ const toMin = (hhmm) => {
 };
 const fromMin = (min) => `${pad(Math.floor(min / 60))}:${pad(min % 60)}`;
 
+/** The earliest moment a booking may start: now plus the lead time. */
+function earliestStart() {
+  return new Date(Date.now() + (CFG.minLeadHours || 0) * 3600 * 1000);
+}
+
+/** Is `date` (ISO) at `hhmm` far enough in the future to be bookable? */
+function isBookable(iso, hhmm) {
+  return new Date(`${iso}T${hhmm}:00`) >= earliestStart();
+}
+
 /** Every selectable time of day, e.g. ["08:00", "08:30", ...]. */
 function timeOptions() {
   const out = [];
@@ -180,6 +190,7 @@ function renderCalendar() {
     const classes = [
       'cal-cell',
       outside ? 'is-outside' : '',
+      iso < todayIso ? 'is-past' : '',
       iso === todayIso ? 'is-today' : '',
       iso === state.selected ? 'ring-2 ring-inset ring-slate-800' : '',
     ].join(' ');
@@ -374,22 +385,54 @@ function refreshTimeMenus() {
   const keepStart = startSel.value;
   const keepEnd = endSel.value;
 
-  startSel.innerHTML = opts.slice(0, -1).map((t) => {
-    const isBusy = busy(toMin(t));
-    return `<option value="${t}" ${isBusy ? 'disabled' : ''}>${t}${isBusy ? say(' (예약됨)', ' (booked)') : ''}</option>`;
+  startSel.innerHTML = opts.slice(0, -1).map((time) => {
+    const isBusy = busy(toMin(time));
+    const tooSoon = !isBookable(state.selected, time);
+    let suffix = '';
+    if (isBusy) suffix = say(' (예약됨)', ' (booked)');
+    else if (tooSoon) suffix = say(' (마감)', ' (closed)');
+    return `<option value="${time}" ${isBusy || tooSoon ? 'disabled' : ''}>${time}${suffix}</option>`;
   }).join('');
   endSel.innerHTML = opts.slice(1).map((t) => `<option value="${t}">${t}</option>`).join('');
 
   if (opts.includes(keepStart)) startSel.value = keepStart;
   if (opts.includes(keepEnd)) endSel.value = keepEnd;
+  if (startSel.selectedOptions[0] && startSel.selectedOptions[0].disabled) {
+    const first = [...startSel.options].find((o) => !o.disabled);
+    startSel.value = first ? first.value : '';
+  }
+  renderDayNotice();
   syncEndAfterStart();
+}
+
+/** Explain a fully closed day rather than leaving an empty menu. */
+function renderDayNotice() {
+  const box = document.getElementById('day-notice');
+  if (!box) return;
+  const startSel = document.getElementById('f-start');
+  const anyOpen = [...startSel.options].some((o) => !o.disabled);
+  const lead = CFG.minLeadHours || 0;
+
+  if (!anyOpen) {
+    box.textContent = say(
+      '이 날은 예약 가능한 시간이 없습니다. 다른 날짜를 선택해 주세요.',
+      'No bookable times left on this day. Please pick another date.');
+    box.hidden = false;
+  } else if (state.selected === isoOf(new Date()) && lead > 0) {
+    box.textContent = say(
+      `현재 시각 기준 ${lead}시간 이후부터 예약할 수 있습니다.`,
+      `Bookings must start at least ${lead} hours from now.`);
+    box.hidden = false;
+  } else {
+    box.hidden = true;
+  }
 }
 
 /** The end time must sit after the start and within maxHours. */
 function syncEndAfterStart() {
   const startSel = document.getElementById('f-start');
   const endSel = document.getElementById('f-end');
-  if (!startSel || !endSel) return;
+  if (!startSel || !endSel || !startSel.value) return;
   const s = toMin(startSel.value);
   [...endSel.options].forEach((o) => {
     const e = toMin(o.value);
@@ -457,6 +500,12 @@ async function onSubmit(event) {
   if (toMin(booking.end) <= toMin(booking.start)) {
     return flash(say('종료 시간이 시작 시간보다 늦어야 합니다.', 'End time must be after the start time.'), 'error');
   }
+  if (!isBookable(booking.date, booking.start)) {
+    const lead = CFG.minLeadHours || 0;
+    return flash(say(
+      `지난 시간은 예약할 수 없습니다. 현재 시각 기준 ${lead}시간 이후부터 예약해 주세요.`,
+      `That time has passed. Bookings must start at least ${lead} hours from now.`), 'error');
+  }
   if (state.reservations.some((r) => overlaps(r, booking))) {
     return flash(say('선택하신 시간에 이미 예약이 있습니다.', 'That time overlaps an existing booking.'), 'error');
   }
@@ -475,6 +524,9 @@ async function onSubmit(event) {
       TOO_FAR: say(`${CFG.maxDaysAhead}일 이내의 날짜만 예약할 수 있습니다.`,
                    `Bookings are accepted up to ${CFG.maxDaysAhead} days ahead.`),
       PAST_DATE: say('지난 날짜는 예약할 수 없습니다.', 'That date is in the past.'),
+      TOO_SOON: say(
+        `지난 시간이거나 너무 임박한 예약입니다. 현재 시각 기준 ${CFG.minLeadHours}시간 이후부터 가능합니다.`,
+        `That time has passed or is too soon. Bookings must start at least ${CFG.minLeadHours} hours from now.`),
     };
     flash(known[err.message] || say('예약에 실패했습니다: ', 'Booking failed: ') + err.message, 'error');
   } finally {
