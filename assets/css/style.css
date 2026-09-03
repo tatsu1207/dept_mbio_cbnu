@@ -195,3 +195,34 @@ html[lang="en"] [data-ko]:not([data-en]) { display: none; }
   color: var(--cbnu-navy);
   box-shadow: 0 1px 2px rgba(16, 48, 92, .18);
 }
+
+/* ==========================================================================
+   Phones
+   ========================================================================== */
+
+/* The week grid never fits seven usable columns on a phone, so it scrolls
+   sideways at a readable width instead of being squeezed. */
+.week-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+@media (max-width: 767px) {
+  .week-grid { min-width: 620px; }
+
+  /* Month cells: shorter, and bookings collapse to time-only chips. */
+  .cal-cell { min-height: 64px; padding: .25rem .1875rem; font-size: .75rem; }
+  .cal-dot { font-size: .5625rem; padding: .0625rem .1875rem; }
+  .cal-dot .dot-name { display: none; }
+
+  /* iOS zooms the page when a focused input is under 16px. */
+  input, select, textarea { font-size: 16px !important; }
+
+  /* Comfortable thumb targets. */
+  .view-btn { padding: .45rem 1rem; }
+  .lang-btn { padding: .35rem .6rem; }
+  input[type="date"], select { min-height: 44px; }
+  #booking-form button[type="submit"] { padding-top: .875rem; padding-bottom: .875rem; }
+}
+
+/* Respect the notch / home indicator when installed to the home screen. */
+@supports (padding: env(safe-area-inset-bottom)) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}

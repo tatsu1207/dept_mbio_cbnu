@@ -185,7 +185,8 @@ function renderCalendar() {
     ].join(' ');
 
     const dots = items.slice(0, 3).map((r) =>
-      `<span class="cal-dot" title="${esc(r.start)}–${esc(r.end)} ${esc(r.name)}">${esc(r.start)} ${esc(r.name)}</span>`
+      `<span class="cal-dot" title="${esc(r.start)}–${esc(r.end)} ${esc(r.name)}">${esc(r.start)}`
+      + `<span class="dot-name"> ${esc(r.name)}</span></span>`
     ).join('');
     const more = items.length > 3
       ? `<span class="block text-[10px] text-gray-400 mt-0.5">+${items.length - 3}</span>` : '';
@@ -301,12 +302,17 @@ function selectDate(iso, startTime) {
       syncEndAfterStart();
     }
   }
+  // On phones the day panel and form sit below the calendar, out of sight.
+  if (window.matchMedia('(max-width: 1023px)').matches) {
+    document.getElementById('day-list').closest('.card')
+      .scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 }
 
 /** Render whichever view is active. */
 function draw() {
   const month = document.getElementById('calendar-grid');
-  const week = document.getElementById('week-grid');
+  const week = document.getElementById('week-scroll');
   const isWeek = state.mode === 'week';
   month.hidden = isWeek;
   week.hidden = !isWeek;
