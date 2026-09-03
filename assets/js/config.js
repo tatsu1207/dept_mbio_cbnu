@@ -10,7 +10,7 @@ window.DEPT_CONFIG = {
        https://script.google.com/macros/s/AKfy..../exec
      While this is empty the booking page runs in DEMO MODE: bookings are
      kept only in your own browser so you can try the interface. -------- */
-  endpoint: '',
+  endpoint: 'https://script.google.com/macros/s/AKfycbwSM7PKj3DuYB4bAivcx2bc7fox9dJdTF93cIiH3Mz_y8n02FAOJrDQ9v6CHDDpyYPV/exec',
 
   /* ---- The room being booked ------------------------------------------ */
   room: {
