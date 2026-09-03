@@ -204,7 +204,6 @@ function renderDay() {
             <span class="text-gray-400">·</span>
             <span class="text-gray-500">${esc(r.lab || '')}</span>
           </p>
-          ${r.purpose ? `<p class="text-xs text-gray-500 mt-0.5">${esc(r.purpose)}</p>` : ''}
         </div>
         <button type="button" data-cancel="${esc(r.id)}"
                 class="flex-shrink-0 text-xs text-red-600 hover:text-red-700 hover:underline">
@@ -307,8 +306,6 @@ async function onSubmit(event) {
     end: document.getElementById('f-end').value,
     name: document.getElementById('f-name').value.trim(),
     lab: document.getElementById('f-lab').value.trim(),
-    email: document.getElementById('f-email').value.trim(),
-    purpose: document.getElementById('f-purpose').value.trim(),
     pin: document.getElementById('f-pin').value.trim(),
   };
 

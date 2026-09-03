@@ -14,7 +14,9 @@ var MAX_HOURS      = 6;
 var OPEN_HOUR      = 8;
 var CLOSE_HOUR     = 22;
 
-var HEADERS = ['id', 'createdAt', 'date', 'start', 'end', 'name', 'lab', 'email', 'purpose', 'pin'];
+// The five columns the office reads come first; the last three are machinery
+// (createdAt for the record, id + pin so a booking can be cancelled).
+var HEADERS = ['date', 'start', 'end', 'name', 'lab', 'createdAt', 'id', 'pin'];
 
 /* ---------------------------------------------------------------- helpers */
 
@@ -73,7 +75,7 @@ function todayIso_() {
 function publicView_(rec) {
   return {
     id: rec.id, date: rec.date, start: rec.start, end: rec.end,
-    name: rec.name, lab: rec.lab, purpose: rec.purpose,
+    name: rec.name, lab: rec.lab,
   };
 }
 
@@ -156,8 +158,6 @@ function create_(b) {
     createdAt: new Date().toISOString(),
     date: date, start: start, end: end,
     name: name, lab: lab,
-    email: String(b.email || '').trim(),
-    purpose: String(b.purpose || '').trim(),
     pin: pin,
   };
 
@@ -181,8 +181,14 @@ function cancel_(b) {
 
 /* --------------------------------------------------------------- one-off */
 
-/** Run once from the editor to create the sheet with its header row. */
+/**
+ * Run once from the editor to create the sheet, and again after changing
+ * HEADERS to rewrite the header row in place.
+ */
 function setup() {
-  sheet_();
-  SpreadsheetApp.getActiveSpreadsheet().toast('Reservations sheet ready.');
+  var sh = sheet_();
+  sh.getRange(1, 1, 1, sh.getMaxColumns()).clearContent();
+  sh.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]).setFontWeight('bold');
+  sh.setFrozenRows(1);
+  SpreadsheetApp.getActiveSpreadsheet().toast('Reservations sheet ready: ' + HEADERS.join(', '));
 }

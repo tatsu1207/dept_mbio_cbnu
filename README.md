@@ -78,6 +78,11 @@ branch → Branch: `main` / `/ (root)` → Save.** The site appears at
 
 > After editing `Code.gs` later, you must **Deploy → Manage deployments → Edit →
 > Version: New version** for the change to take effect. The `/exec` URL stays the same.
+> If you changed `HEADERS`, run `setup` once more to rewrite the header row.
+
+The sheet has eight columns: `date, start, end, name, lab` are what the office
+reads; `createdAt, id, pin` are machinery the cancel flow needs. Hide the last
+three in the sheet if they are in the way — do not delete them.
 
 ### 4. Make it yours
 

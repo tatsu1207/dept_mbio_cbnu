@@ -190,7 +190,7 @@ async function renderUpcoming() {
       <li class="flex items-baseline gap-3 py-2 border-b border-gray-100 last:border-0">
         <span class="text-xs font-mono text-gray-400 flex-shrink-0 w-24">${esc(r.date.slice(5))} ${esc(r.start)}</span>
         <span class="text-sm text-gray-800 truncate">${esc(r.name)}</span>
-        <span class="text-xs text-gray-400 truncate">${esc(r.purpose || r.lab || '')}</span>
+        <span class="text-xs text-gray-400 truncate">${esc(r.lab || '')}</span>
       </li>`).join('');
   }
 
