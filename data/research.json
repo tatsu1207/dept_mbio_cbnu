@@ -1,0 +1,20 @@
+{
+  "areas": [
+    { "icon": "🧬",
+      "title": { "ko": "미생물 유전체 및 생물정보학", "en": "Microbial Genomics & Bioinformatics" },
+      "desc": { "ko": "유전체 서열 분석을 통해 미생물의 기능과 진화를 규명합니다.",
+                "en": "Sequence-based study of microbial function and evolution." } },
+    { "icon": "🌱",
+      "title": { "ko": "환경 및 토양 미생물학", "en": "Environmental & Soil Microbiology" },
+      "desc": { "ko": "수계와 토양 미생물 군집의 구조와 물질 순환 기여도를 연구합니다.",
+                "en": "Community structure and nutrient cycling in water and soil." } },
+    { "icon": "🦠",
+      "title": { "ko": "병원성 미생물 및 항생제 내성", "en": "Pathogens & Antimicrobial Resistance" },
+      "desc": { "ko": "병원성 인자와 항생제 내성 유전자의 확산 기작을 분석합니다.",
+                "en": "Virulence factors and the spread of resistance genes." } },
+    { "icon": "🧪",
+      "title": { "ko": "산업 및 응용 미생물학", "en": "Industrial & Applied Microbiology" },
+      "desc": { "ko": "발효, 생물전환, 유용 대사산물 생산 기술을 개발합니다.",
+                "en": "Fermentation, biotransformation and metabolite production." } }
+  ]
+}

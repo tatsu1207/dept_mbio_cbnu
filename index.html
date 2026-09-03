@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home | Dept. of Microbiology, CBNU</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body data-root="./" data-news-limit="4">
+<header id="main-nav" class="bg-white sticky top-0 z-20 border-b border-gray-200 shadow-sm"></header>
+
+<section class="dept-bg text-white">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+    <p class="text-white/70 font-semibold tracking-wide mb-3"
+       data-ko="충북대학교 자연과학대학" data-en="College of Natural Sciences, Chungbuk National University"></p>
+    <h1 class="text-4xl sm:text-6xl font-extrabold leading-tight"
+        data-ko="미생물학과" data-en="Department of Microbiology"></h1>
+    <p class="mt-5 max-w-2xl text-lg text-white/80"
+       data-ko="보이지 않는 생명을 탐구하여 건강, 환경, 산업의 문제를 해결합니다."
+       data-en="Studying the unseen life that shapes human health, the environment, and industry."></p>
+    <div class="mt-8 flex flex-wrap gap-3">
+      <a href="./reserve.html" class="px-5 py-2.5 rounded-md bg-white text-slate-900 font-semibold hover:bg-gray-100 transition"
+         data-ko="세미나실 예약하기" data-en="Book the seminar room"></a>
+      <a href="./about.html" class="px-5 py-2.5 rounded-md border border-white/40 font-semibold hover:bg-white/10 transition"
+         data-ko="학과 소개" data-en="About the department"></a>
+    </div>
+  </div>
+</section>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+
+  <section class="grid gap-6 md:grid-cols-3">
+    <a href="./faculty.html" class="card card-hover p-6 block">
+      <h3 class="font-bold dept-color mb-1" data-ko="교수진" data-en="Faculty"></h3>
+      <p class="text-sm text-gray-600" data-ko="연구분야별 교수진과 연구실을 찾아보세요."
+         data-en="Browse faculty and labs by research area."></p>
+    </a>
+    <a href="./courses.html" class="card card-hover p-6 block">
+      <h3 class="font-bold dept-color mb-1" data-ko="교과과정" data-en="Courses"></h3>
+      <p class="text-sm text-gray-600" data-ko="학부 및 대학원 개설 교과목."
+         data-en="Undergraduate and graduate coursework."></p>
+    </a>
+    <a href="./research.html" class="card card-hover p-6 block">
+      <h3 class="font-bold dept-color mb-1" data-ko="연구분야" data-en="Research"></h3>
+      <p class="text-sm text-gray-600" data-ko="학과의 주요 연구 주제."
+         data-en="What we work on."></p>
+    </a>
+  </section>
+
+  <div class="grid gap-8 lg:grid-cols-5">
+    <section class="lg:col-span-3">
+      <div class="flex items-baseline justify-between mb-4">
+        <h2 class="text-2xl section-title" data-ko="소식 및 공지" data-en="News & Notices"></h2>
+        <a href="./news.html" class="text-sm accent-color hover:underline" data-ko="전체 보기 →" data-en="See all →"></a>
+      </div>
+      <div class="card p-6"><div id="news-list"></div></div>
+    </section>
+
+    <section class="lg:col-span-2">
+      <div class="flex items-baseline justify-between mb-4">
+        <h2 class="text-2xl section-title" data-ko="세미나실 예약 현황" data-en="Seminar Room"></h2>
+        <a href="./reserve.html" class="text-sm accent-color hover:underline" data-ko="예약하기 →" data-en="Book →"></a>
+      </div>
+      <div class="card p-6">
+        <p class="text-xs text-gray-500 mb-2" data-ko="앞으로 2주간의 예약" data-en="Next two weeks"></p>
+        <ul id="upcoming-list"></ul>
+      </div>
+    </section>
+  </div>
+
+</main>
+<footer id="main-footer" class="mt-12"></footer>
+<script src="./assets/js/config.js"></script>
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/pages.js"></script>
+</body>
+</html>

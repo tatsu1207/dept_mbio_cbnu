@@ -1,0 +1,112 @@
+/* ==========================================================================
+   Department of Microbiology, CBNU — base stylesheet
+   Tailwind (CDN) handles layout/utilities; this file holds the theme tokens,
+   typography and the few components Tailwind utilities read badly for.
+   ========================================================================== */
+
+:root {
+  --cbnu-navy: #10305c;
+  --cbnu-navy-dark: #0a1f3d;
+  --cbnu-accent: #0e7490;
+  --cbnu-accent-light: #e0f2f7;
+  --ink: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  color: var(--ink);
+  background: #f7f8fa;
+  font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo",
+               ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Korean text wraps better on word boundaries */
+html[lang="ko"] body { word-break: keep-all; }
+
+.dept-color { color: var(--cbnu-navy); }
+.dept-bg    { background-color: var(--cbnu-navy); }
+.accent-color { color: var(--cbnu-accent); }
+
+/* --- navigation ---------------------------------------------------------- */
+.nav-link { position: relative; }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: -6px;
+  width: 0; height: 2px;
+  background-color: var(--cbnu-accent);
+  transition: width .2s ease-in-out;
+}
+.nav-link:hover::after,
+.nav-link[aria-current="page"]::after { width: 100%; }
+.nav-link[aria-current="page"] { color: var(--cbnu-navy); font-weight: 700; }
+
+/* --- cards --------------------------------------------------------------- */
+.card {
+  background: #fff;
+  border-radius: .75rem;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(16, 48, 92, .04), 0 8px 24px rgba(16, 48, 92, .06);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.card-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(16, 48, 92, .08), 0 16px 32px rgba(16, 48, 92, .10);
+}
+
+.section-title {
+  color: var(--cbnu-navy);
+  font-weight: 800;
+  letter-spacing: -.02em;
+}
+
+/* --- tags / pills -------------------------------------------------------- */
+.tag {
+  display: inline-block;
+  padding: .125rem .625rem;
+  border-radius: 9999px;
+  font-size: .75rem;
+  font-weight: 600;
+  background: var(--cbnu-accent-light);
+  color: var(--cbnu-accent);
+}
+
+/* --- calendar ------------------------------------------------------------ */
+.cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 1px; background: var(--line); }
+.cal-cell { background: #fff; min-height: 92px; padding: .375rem; font-size: .8125rem; }
+.cal-cell.is-outside { background: #fafafa; color: #c4c8ce; }
+.cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--cbnu-accent); }
+.cal-dot {
+  display: block; width: 100%; text-align: left;
+  margin-top: .125rem; padding: .125rem .25rem;
+  border-radius: .25rem; font-size: .6875rem; line-height: 1.2;
+  background: var(--cbnu-accent-light); color: var(--cbnu-accent);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  cursor: pointer;
+}
+.cal-dot:hover { background: var(--cbnu-accent); color: #fff; }
+
+/* --- scrollbar ----------------------------------------------------------- */
+.custom-scrollbar::-webkit-scrollbar { width: 8px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: #f1f2f4; border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #c3c8d0; border-radius: 4px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--cbnu-accent); }
+
+/* --- language toggle ----------------------------------------------------- */
+.lang-btn {
+  padding: .125rem .5rem; border-radius: .375rem;
+  font-size: .75rem; font-weight: 700; color: var(--muted);
+}
+.lang-btn.is-active { background: var(--cbnu-navy); color: #fff; }
+
+/* Hide the language that is not active. Set by main.js on <html>. */
+html[lang="ko"] [data-en]:not([data-ko]) { display: none; }
+html[lang="en"] [data-ko]:not([data-en]) { display: none; }
+
+@media print {
+  header, footer, .no-print { display: none !important; }
+  body { background: #fff; }
+}

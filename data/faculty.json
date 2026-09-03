@@ -1,0 +1,41 @@
+{
+  "_comment": "Edit this file to update the faculty directory. Photos go in assets/img/ ; leave photo empty to show initials instead.",
+  "faculty": [
+    {
+      "id": "unno",
+      "name": { "ko": "운노 타츠야", "en": "Tatsuya Unno" },
+      "title": { "ko": "교수", "en": "Professor" },
+      "lab": { "ko": "미생물체 연구실", "en": "Microbiome Lab" },
+      "areas": ["Microbiome", "Bioinformatics", "Environmental Microbiology"],
+      "email": "tatsu@cbnu.ac.kr",
+      "phone": "043-261-2304",
+      "office": { "ko": "자연과학대학 3호관", "en": "Natural Sciences Bldg. 3" },
+      "website": "https://tatsu1207.github.io/mblcbnu/",
+      "photo": ""
+    },
+    {
+      "id": "placeholder-1",
+      "name": { "ko": "교수님 성함", "en": "Faculty Name" },
+      "title": { "ko": "부교수", "en": "Associate Professor" },
+      "lab": { "ko": "연구실 이름", "en": "Lab Name" },
+      "areas": ["Molecular Microbiology"],
+      "email": "example@chungbuk.ac.kr",
+      "phone": "043-261-0000",
+      "office": { "ko": "자연과학대학 3호관", "en": "Natural Sciences Bldg. 3" },
+      "website": "",
+      "photo": ""
+    },
+    {
+      "id": "placeholder-2",
+      "name": { "ko": "교수님 성함", "en": "Faculty Name" },
+      "title": { "ko": "조교수", "en": "Assistant Professor" },
+      "lab": { "ko": "연구실 이름", "en": "Lab Name" },
+      "areas": ["Virology", "Immunology"],
+      "email": "example@chungbuk.ac.kr",
+      "phone": "043-261-0000",
+      "office": { "ko": "자연과학대학 3호관", "en": "Natural Sciences Bldg. 3" },
+      "website": "",
+      "photo": ""
+    }
+  ]
+}

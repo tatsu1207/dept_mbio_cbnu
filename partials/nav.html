@@ -1,0 +1,51 @@
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between h-16">
+
+    <a href="./index.html" class="flex items-center space-x-3 flex-shrink-0">
+      <div class="h-9 w-9 rounded-lg dept-bg text-white grid place-items-center font-extrabold text-sm">MB</div>
+      <span class="text-lg sm:text-xl font-extrabold dept-color leading-tight"
+            data-ko="충북대학교 미생물학과" data-en="Dept. of Microbiology, CBNU"></span>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <nav class="hidden lg:flex items-center space-x-6 text-sm font-medium">
+        <a href="./index.html"    class="nav-link text-gray-600 hover:text-gray-900" data-ko="홈"     data-en="Home"></a>
+        <a href="./about.html"    class="nav-link text-gray-600 hover:text-gray-900" data-ko="학과소개" data-en="About"></a>
+        <a href="./faculty.html"  class="nav-link text-gray-600 hover:text-gray-900" data-ko="교수진"   data-en="Faculty"></a>
+        <a href="./research.html" class="nav-link text-gray-600 hover:text-gray-900" data-ko="연구"     data-en="Research"></a>
+        <a href="./courses.html"  class="nav-link text-gray-600 hover:text-gray-900" data-ko="교과과정" data-en="Courses"></a>
+        <a href="./news.html"     class="nav-link text-gray-600 hover:text-gray-900" data-ko="소식"     data-en="News"></a>
+        <a href="./contact.html"  class="nav-link text-gray-600 hover:text-gray-900" data-ko="찾아오는 길" data-en="Contact"></a>
+        <a href="./reserve.html"  class="px-3 py-1.5 rounded-md dept-bg text-white font-semibold hover:opacity-90 transition"
+           data-ko="세미나실 예약" data-en="Book a Room"></a>
+      </nav>
+
+      <div class="flex items-center gap-1 border-l pl-3 ml-1 border-gray-200">
+        <button class="lang-btn" data-lang="ko" type="button">KO</button>
+        <button class="lang-btn" data-lang="en" type="button">EN</button>
+      </div>
+
+      <button id="mobile-menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu"
+              class="lg:hidden text-gray-700 hover:text-gray-900 p-1">
+        <span class="sr-only">Menu</span>
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="mobile-menu" class="lg:hidden hidden border-t border-gray-200 bg-white">
+  <nav class="px-4 py-3 space-y-1 text-sm">
+    <a href="./index.html"    class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="홈"       data-en="Home"></a>
+    <a href="./about.html"    class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="학과소개"  data-en="About"></a>
+    <a href="./faculty.html"  class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="교수진"    data-en="Faculty"></a>
+    <a href="./research.html" class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="연구"      data-en="Research"></a>
+    <a href="./courses.html"  class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="교과과정"  data-en="Courses"></a>
+    <a href="./news.html"     class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="소식"      data-en="News"></a>
+    <a href="./contact.html"  class="block px-3 py-2 rounded-md hover:bg-gray-100" data-ko="찾아오는 길" data-en="Contact"></a>
+    <a href="./reserve.html"  class="block px-3 py-2 mt-2 rounded-md dept-bg text-white font-semibold"
+       data-ko="세미나실 예약" data-en="Book a Room"></a>
+  </nav>
+</div>

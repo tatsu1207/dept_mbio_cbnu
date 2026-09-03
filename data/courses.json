@@ -1,0 +1,25 @@
+{
+  "_comment": "level: undergraduate | graduate. semester: 1 | 2 | both",
+  "courses": [
+    { "code": "MBIO201", "level": "undergraduate", "semester": "1", "credits": 3,
+      "title": { "ko": "일반미생물학", "en": "General Microbiology" },
+      "desc": { "ko": "미생물의 구조, 대사, 유전, 분류에 대한 기초 개념을 다룹니다.",
+                "en": "Structure, metabolism, genetics and taxonomy of microorganisms." } },
+    { "code": "MBIO302", "level": "undergraduate", "semester": "2", "credits": 3,
+      "title": { "ko": "미생물생리학", "en": "Microbial Physiology" },
+      "desc": { "ko": "미생물의 에너지 대사와 생장 조절 기작을 학습합니다.",
+                "en": "Energy metabolism and regulation of microbial growth." } },
+    { "code": "MBIO401", "level": "undergraduate", "semester": "1", "credits": 3,
+      "title": { "ko": "미생물유전학", "en": "Microbial Genetics" },
+      "desc": { "ko": "돌연변이, 유전자 전달, 유전체 편집 기법을 다룹니다.",
+                "en": "Mutation, gene transfer, and genome editing techniques." } },
+    { "code": "MBIO511", "level": "graduate", "semester": "1", "credits": 3,
+      "title": { "ko": "미생물군집 분석", "en": "Microbiome Data Analysis" },
+      "desc": { "ko": "앰플리콘 및 메타지놈 데이터의 분석 파이프라인을 실습합니다.",
+                "en": "Hands-on amplicon and metagenome analysis pipelines." } },
+    { "code": "MBIO598", "level": "graduate", "semester": "both", "credits": 1,
+      "title": { "ko": "미생물학 세미나", "en": "Microbiology Seminar" },
+      "desc": { "ko": "대학원생 및 초청 연사의 연구 발표와 토론.",
+                "en": "Research talks by graduate students and invited speakers." } }
+  ]
+}

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seminar Room Booking | Dept. of Microbiology, CBNU</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body data-root="./">
+<header id="main-nav" class="bg-white sticky top-0 z-20 border-b border-gray-200 shadow-sm"></header>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+  <div id="demo-banner" hidden class="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+    <strong data-ko="데모 모드" data-en="Demo mode"></strong>
+    <span data-ko="— 예약이 이 브라우저에만 저장됩니다. 실제 운영하려면 assets/js/config.js 의 endpoint 를 설정하세요."
+          data-en="— bookings are stored only in this browser. Set `endpoint` in assets/js/config.js to go live."></span>
+  </div>
+
+  <div class="mb-6">
+    <h1 class="text-3xl sm:text-4xl section-title" data-ko="세미나실 예약" data-en="Seminar Room Booking"></h1>
+    <p class="mt-2 text-gray-600">
+      <span id="room-name" class="font-semibold text-gray-800"></span>
+      <span class="text-gray-400 mx-2">·</span>
+      <span id="room-location"></span>
+    </p>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-5">
+
+    <!-- calendar -->
+    <section class="card p-4 sm:p-6 lg:col-span-3">
+      <div class="flex items-center justify-between mb-4">
+        <h2 id="calendar-label" class="text-xl font-bold dept-color"></h2>
+        <div class="flex items-center gap-1">
+          <button id="cal-today" type="button"
+                  class="px-3 py-1 text-xs font-semibold rounded-md border border-gray-300 hover:bg-gray-50"
+                  data-ko="오늘" data-en="Today"></button>
+          <button id="cal-prev" type="button" aria-label="Previous month"
+                  class="p-1.5 rounded-md border border-gray-300 hover:bg-gray-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          </button>
+          <button id="cal-next" type="button" aria-label="Next month"
+                  class="p-1.5 rounded-md border border-gray-300 hover:bg-gray-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <p id="calendar-loading" hidden class="text-sm text-gray-400 italic mb-2"
+         data-ko="불러오는 중…" data-en="Loading…"></p>
+
+      <div id="calendar-grid" class="cal-grid rounded-lg overflow-hidden border border-gray-200"></div>
+
+      <p class="mt-3 text-xs text-gray-500"
+         data-ko="날짜를 클릭하면 그 날의 예약 현황과 예약 폼이 오른쪽에 표시됩니다."
+         data-en="Click a date to see that day's bookings and the form."></p>
+    </section>
+
+    <!-- day detail + form -->
+    <section class="lg:col-span-2 space-y-6">
+
+      <div class="card p-4 sm:p-6">
+        <h2 class="text-lg font-bold dept-color mb-1" data-ko="예약 현황" data-en="Bookings"></h2>
+        <p id="day-heading" class="text-sm text-gray-500 mb-2"></p>
+        <div id="day-list" class="max-h-64 overflow-y-auto custom-scrollbar pr-1"></div>
+      </div>
+
+      <form id="booking-form" class="card p-4 sm:p-6 space-y-4" novalidate>
+        <h2 class="text-lg font-bold dept-color" data-ko="새 예약" data-en="New booking"></h2>
+
+        <div>
+          <label for="f-date" class="block text-sm font-medium text-gray-700 mb-1"
+                 data-ko="날짜" data-en="Date"></label>
+          <input id="f-date" type="date" required
+                 class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-600 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label for="f-start" class="block text-sm font-medium text-gray-700 mb-1"
+                   data-ko="시작" data-en="Start"></label>
+            <select id="f-start" class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm bg-white"></select>
+          </div>
+          <div>
+            <label for="f-end" class="block text-sm font-medium text-gray-700 mb-1"
+                   data-ko="종료" data-en="End"></label>
+            <select id="f-end" class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm bg-white"></select>
+          </div>
+        </div>
+
+        <div>
+          <label for="f-name" class="block text-sm font-medium text-gray-700 mb-1"
+                 data-ko="이름 *" data-en="Name *"></label>
+          <input id="f-name" type="text" required maxlength="40"
+                 data-ko-placeholder="홍길동" data-en-placeholder="Your name"
+                 class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm">
+        </div>
+
+        <div>
+          <label for="f-lab" class="block text-sm font-medium text-gray-700 mb-1"
+                 data-ko="연구실 / 지도교수 *" data-en="Lab / advisor *"></label>
+          <input id="f-lab" type="text" required maxlength="60"
+                 data-ko-placeholder="미생물체 연구실 (운노 타츠야)" data-en-placeholder="Microbiome Lab (T. Unno)"
+                 class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm">
+        </div>
+
+        <div>
+          <label for="f-email" class="block text-sm font-medium text-gray-700 mb-1"
+                 data-ko="이메일" data-en="Email"></label>
+          <input id="f-email" type="email" maxlength="80" placeholder="you@chungbuk.ac.kr"
+                 class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm">
+        </div>
+
+        <div>
+          <label for="f-purpose" class="block text-sm font-medium text-gray-700 mb-1"
+                 data-ko="사용 목적" data-en="Purpose"></label>
+          <input id="f-purpose" type="text" maxlength="80"
+                 data-ko-placeholder="랩미팅, 세미나, 학위논문 발표 등" data-en-placeholder="Lab meeting, seminar, defense…"
+                 class="w-full rounded-md border-gray-300 border px-3 py-2 text-sm">
+        </div>
+
+        <div>
+          <label for="f-pin" class="block text-sm font-medium text-gray-700 mb-1"
+                 data-ko="취소용 PIN (숫자 4자리) *" data-en="Cancellation PIN (4 digits) *"></label>
+          <input id="f-pin" type="text" inputmode="numeric" pattern="\d{4}" maxlength="4" required placeholder="0000"
+                 class="w-32 rounded-md border-gray-300 border px-3 py-2 text-sm tracking-widest">
+          <p class="mt-1 text-xs text-gray-500"
+             data-ko="예약을 취소할 때 필요합니다. 잊지 마세요."
+             data-en="You will need this to cancel. Don't lose it."></p>
+        </div>
+
+        <p id="form-status" hidden></p>
+
+        <button type="submit"
+                class="w-full dept-bg text-white font-semibold rounded-md py-2.5 hover:opacity-90 transition disabled:opacity-50"
+                data-ko="예약하기" data-en="Book the room"></button>
+      </form>
+
+      <div class="card p-4 sm:p-6 text-sm text-gray-600 space-y-2">
+        <h3 class="font-bold text-gray-800" data-ko="이용 안내" data-en="House rules"></h3>
+        <ul class="list-disc list-inside space-y-1">
+          <li data-ko="이용 시간: 08:00 – 22:00, 1회 최대 6시간" data-en="Open 08:00–22:00, up to 6 hours per booking"></li>
+          <li data-ko="사용 후 정리정돈 및 소등 부탁드립니다." data-en="Tidy the room and turn off the lights when you leave."></li>
+          <li data-ko="사용하지 않게 되면 반드시 예약을 취소해 주세요." data-en="Cancel your booking if your plans change."></li>
+          <li data-ko="문의: 학과 사무실 043-261-2300" data-en="Questions: department office, 043-261-2300"></li>
+        </ul>
+      </div>
+
+    </section>
+  </div>
+</main>
+
+<footer id="main-footer" class="mt-12"></footer>
+
+<script src="./assets/js/config.js"></script>
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/reserve.js"></script>
+</body>
+</html>

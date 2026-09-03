@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faculty | Dept. of Microbiology, CBNU</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="./assets/css/style.css">
+</head>
+<body data-root="./">
+<header id="main-nav" class="bg-white sticky top-0 z-20 border-b border-gray-200 shadow-sm"></header>
+<main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <h1 class="text-3xl sm:text-4xl section-title mb-6" data-ko="교수진" data-en="Faculty"></h1>
+
+  <div class="card p-4 mb-6 flex flex-col sm:flex-row gap-3 sm:items-center">
+    <input id="faculty-search" type="search"
+           data-ko-placeholder="이름, 연구실, 연구분야 검색…" data-en-placeholder="Search name, lab, research area…"
+           class="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-cyan-600 focus:outline-none">
+    <select id="faculty-area" class="rounded-md border border-gray-300 px-3 py-2 text-sm bg-white"></select>
+    <span id="faculty-count" class="text-sm text-gray-500 sm:ml-2"></span>
+  </div>
+
+  <div id="faculty-grid" class="grid gap-6 md:grid-cols-2"></div>
+</main>
+<footer id="main-footer" class="mt-12"></footer>
+<script src="./assets/js/config.js"></script>
+<script src="./assets/js/main.js"></script>
+<script src="./assets/js/pages.js"></script>
+</body>
+</html>
