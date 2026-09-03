@@ -15,7 +15,7 @@ window.DEPT_CONFIG = {
   /* ---- The room being booked ------------------------------------------ */
   room: {
     name:     { ko: '미생물학과 세미나실', en: 'Microbiology Seminar Room' },
-    location: { ko: '자연과학대학 3호관 305호', en: 'Natural Sciences Bldg. 3, Room 305' },
+    location: { ko: 'S1-5 208호', en: 'S1-5, Room 208' },
     capacity: 30,
   },
 
